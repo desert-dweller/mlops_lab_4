@@ -1,0 +1,9 @@
+project: telco_churn_features
+registry: data/registry.db
+provider: local
+offline_store:
+  type: file
+  path: ../data/processed/churn_features.parquet
+online_store:
+  type: sqlite
+  path: data/online_store.db

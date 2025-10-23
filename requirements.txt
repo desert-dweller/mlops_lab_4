@@ -1,0 +1,15 @@
+# Core libraries for data and ML
+pandas
+pyarrow
+scikit-learn
+
+# MLOps tools
+dvc
+feast
+
+# API and Web Server
+fastapi
+uvicorn[standard]
+
+# Utilities
+python-dotenv
