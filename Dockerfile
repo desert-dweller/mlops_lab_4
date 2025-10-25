@@ -10,13 +10,16 @@ COPY ./requirements.txt /code/requirements.txt
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# --- NEW: Copy DVC metadata and pull the data from the remote ---
+# --- NEW: Copy the Git history so DVC knows which data version to pull ---
+COPY .git .git
+# -----------------------------------------------------------------------
+
+# Copy DVC metadata and pull the data from the remote
 COPY .dvc .dvc
 COPY ./data /code/data
 COPY ./src /code/src
-# This command downloads the actual data files from Dagshub
+# This command will now work because the .git directory is present
 RUN dvc pull
-# -----------------------------------------------------------------
 
 # Copy the feature repository into the container *before* running feast commands
 COPY ./feature_repo /code/feature_repo
@@ -25,7 +28,6 @@ COPY ./feature_repo /code/feature_repo
 RUN cd /code/feature_repo && feast apply
 
 # 2. Pre-populate the online store with the latest features
-# Note: In a Unix environment, we can use the $(...) syntax
 RUN cd /code/feature_repo && feast materialize-incremental $(python -c "from datetime import datetime; print(datetime.now().isoformat())")
 
 # Copy the app directory (containing main.py) into the container at /code
