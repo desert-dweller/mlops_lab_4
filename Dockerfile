@@ -10,16 +10,18 @@ COPY ./requirements.txt /code/requirements.txt
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+# --- NEW: Copy the data directory so Feast can find the Parquet file ---
+COPY ./data /code/data
+# ----------------------------------------------------------------------
+
 # Copy the feature repository into the container *before* running feast commands
 COPY ./feature_repo /code/feature_repo
 
-# --- NEW COMMANDS ---
 # 1. Build the feature store registry and database files
 RUN cd /code/feature_repo && feast apply
 
 # 2. Pre-populate the online store with the latest features
 RUN cd /code/feature_repo && feast materialize-incremental $(python -c "from datetime import datetime; print(datetime.now().isoformat())")
-# --------------------
 
 # Copy the app directory (containing main.py) into the container at /code
 COPY ./app /code/app
