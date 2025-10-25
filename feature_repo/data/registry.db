@@ -1,0 +1,35 @@
+
+K
++
+__dummy"
+__dummy_idJtelco_churn_features
+‘ïñÇÈú×®‘ïñÇÈú×®
+N
+.
+customer"
+customerIDJtelco_churn_features
+‘ïñÇ ÷”¯‘ïñÇ ÷”¯1"$eec6b908-bcb2-4286-91a1-2e681c19f366*šôñÇÖÀÅ2Ô
+•
+churn_features_viewtelco_churn_featurescustomer"
+
+gender"
+SeniorCitizen"
+Partner"
+
+Dependents"
+
+tenure"
+Contract"
+MonthlyCharges"
+TotalCharges"	
+Churn2€ç„:½event_timestampZ*(../data/processed/churn_features.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢(../data/processed/churn_features.parquet’‘ïñÇø¦¶‰"‘ïñÇÈú×®@b
+
+customerID:
+‘ïñÇ ÷”¯šôñÇÈ°Å
+˜í¸€ÀÔÃ·ÈòÇ »¹ĞRÎ
+Ë
+,feast.infra.online_stores.sqlite.SqliteTable"š
+nD:\Second\Documents\NU\Teaching\Fall '25\AIS477 MLOps\Labs\Lab 4\mlops_lab_4\feature_repo\data\online_store.db(telco_churn_features_churn_features_viewbÔevent_timestampZ*(../data/processed/churn_features.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢(../data/processed/churn_features.parquetªtelco_churn_features’‘ïñÇø¦¶‰"‘ïñÇÈú×®Š6
+
+telco_churn_features
+‘ïñÇ€”ó‰‘ïñÇ€”ó‰

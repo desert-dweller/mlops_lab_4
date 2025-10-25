@@ -21,10 +21,10 @@ stages:
       size: 978285
     - path: src/process_data.py
       hash: md5
-      md5: 138162c334bf9ca3e946390902c30242
-      size: 590
+      md5: 78455dcc747ef8e267aedbc75e3cc1ce
+      size: 793
     outs:
     - path: data/processed/churn_features.parquet
       hash: md5
-      md5: 0731d8d03f6aca8d72adddec065198b4
-      size: 195574
+      md5: 163ddfe37c65cdbb6fe295a099135eec
+      size: 196225
