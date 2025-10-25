@@ -1,50 +1,33 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Set the working directory in the container to /code
+# Set the main working directory
 WORKDIR /code
 
-# --- NEW: Define build arguments to receive secrets ---
-ARG DVC_USER
-ARG DVC_TOKEN
-# ----------------------------------------------------
+# Copy and install requirements first to leverage Docker caching
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Copy the requirements file into the container at /code
-COPY ./requirements.txt /code/requirements.txt
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-# Copy the Git history so DVC knows which data version to pull
-COPY .git .git
-
-# Copy DVC metadata and config files
-COPY .dvc .dvc
-COPY ./data /code/data
-COPY ./src /code/src
+# Copy all the project files into the container
+# This includes .git, .dvc, data, src, feature_repo, and app
+COPY . .
 
 # --- THIS IS THE CRITICAL FIX ---
-# 1. Use the build arguments to create the DVC config file inside the container
-RUN echo "['remote \"origin\"']\nuser = ${DVC_USER}\npassword = ${DVC_TOKEN}" > .dvc/config.local
-
-# 2. Run dvc pull. It will now find and use the credentials.
+# Run dvc pull to download the actual data files from Dagshub
 RUN dvc pull
 
-# 3. Immediately remove the config file so secrets are not saved in the image.
-RUN rm .dvc/config.local
+# Set the working directory to the feature repo for the Feast commands
+WORKDIR /code/feature_repo
+
+# 1. Build the feature store registry and database files
+RUN feast apply
+
+# 2. Pre-populate the online store with the latest features
+RUN feast materialize-incremental $(python -c "from datetime import datetime; print(datetime.now().isoformat())")
+
+# Reset the working directory for the final app command
+WORKDIR /code
 # --------------------------------
-
-# Copy the feature repository into the container *before* running feast commands
-COPY ./feature_repo /code/feature_repo
-
-# Build the feature store registry and database files
-RUN cd /code/feature_repo && feast apply
-
-# Pre-populate the online store with the latest features
-RUN cd /code/feature_repo && feast materialize-incremental $(python -c "from datetime import datetime; print(datetime.now().isoformat())")
-
-# Copy the app directory (containing main.py) into the container at /code
-COPY ./app /code/app
 
 # Make port 10000 available to the world outside this container
 EXPOSE 10000
