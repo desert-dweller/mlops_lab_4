@@ -1,29 +1,35 @@
 # feature_repo/churn_definitions.py
 from datetime import timedelta
-from feast import (
-    Entity, Feature, FeatureView, FileSource, ValueType,
+from feast import Entity, Field, FeatureView, FileSource, ValueType
+from feast.types import String, Int64, Float64  # <-- Import Float64
+
+customer_entity = Entity(
+    name="customer",
+    join_keys=["customerID"],
+    value_type=ValueType.STRING
 )
 
-customer = Entity(name="customerID", value_type=ValueType.STRING)
-
 churn_source = FileSource(
-    file_path="../data/processed/churn_features.parquet",
+    path="../data/processed/churn_features.parquet",
+    timestamp_field="",
 )
 
 churn_features_view = FeatureView(
     name="churn_features_view",
-    entities=[customer],
+    entities=[customer_entity],
     ttl=timedelta(days=365),
-    features=[
-        Feature(name="gender", dtype=ValueType.STRING),
-        Feature(name="SeniorCitizen", dtype=ValueType.INT64),
-        Feature(name="Partner", dtype=ValueType.STRING),
-        Feature(name="Dependents", dtype=ValueType.STRING),
-        Feature(name="tenure", dtype=ValueType.INT64),
-        Feature(name="Contract", dtype=ValueType.STRING),
-        Feature(name="MonthlyCharges", dtype=ValueType.FLOAT),
-        Feature(name="TotalCharges", dtype=ValueType.FLOAT),
-        Feature(name="Churn", dtype=ValueType.INT64),
+    schema=[
+        Field(name="gender", dtype=String),
+        Field(name="SeniorCitizen", dtype=Int64),
+        Field(name="Partner", dtype=String),
+        Field(name="Dependents", dtype=String),
+        Field(name="tenure", dtype=Int64),
+        Field(name="Contract", dtype=String),
+        Field(name="MonthlyCharges", dtype=Float64), 
+        Field(name="TotalCharges", dtype=Float64),   
+        Field(name="Churn", dtype=Int64),
     ],
-    source=churn_source, online=True, tags={},
+    source=churn_source,
+    online=True,
+    tags={},
 )

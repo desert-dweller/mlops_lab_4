@@ -13,6 +13,9 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 # Copy the app directory (containing main.py) into the container at /code
 COPY ./app /code/app
 
+# Copy the feature repository into the container
+COPY ./feature_repo /code/feature_repo
+
 # Make port 10000 available to the world outside this container
 EXPOSE 10000
 
