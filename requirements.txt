@@ -5,7 +5,7 @@ scikit-learn
 
 # MLOps tools
 dvc
-feast
+feast[redis]
 
 # API and Web Server
 fastapi
